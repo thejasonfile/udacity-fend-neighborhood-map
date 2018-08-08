@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Title from './Title'
 import LocationList from './LocationList'
+import GoogleMap from './GoogleMap'
 
 class App extends Component {
   render() {
@@ -8,6 +9,7 @@ class App extends Component {
       <div>
         <Title />
         <LocationList />
+        <GoogleMap />
       </div>
     );
   }
