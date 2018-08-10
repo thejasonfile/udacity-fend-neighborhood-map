@@ -15,8 +15,8 @@ class LocationList extends Component {
       <div>
         <input type="text" onChange={(e) => this.onInputChange(e)} />
         <ul>
-          {this.props.locations.map((loc, index) => (
-            <li key={index}>{loc}</li>
+          {this.props.locations.map((locObj, index) => (
+            <li key={index}>{locObj.title}</li>
           ))}
         </ul>
       </div>
