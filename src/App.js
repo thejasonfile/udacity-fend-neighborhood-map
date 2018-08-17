@@ -51,7 +51,13 @@ class App extends Component {
         lat: 40.7116,
         lng: -74.0133
       }
-    ]
+    ],
+    allMarkers: [],
+    currentMarker: null
+  }
+
+  setCurrentMarker = marker => {
+    this.setState({ currentMarker: marker })
   }
 
   render() {
@@ -61,7 +67,9 @@ class App extends Component {
         <LocationList
           locations = {this.state.locations}
         />
-        <GoogleMap />
+        <GoogleMap
+          locations = {this.state.locations}
+        />
       </div>
     );
   }
