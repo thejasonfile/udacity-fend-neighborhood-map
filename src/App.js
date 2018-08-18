@@ -9,12 +9,6 @@ class App extends Component {
 
   componentDidMount() {
     this.getVenues()
-    this.renderMap()
-  }
-
-  renderMap = () => {
-    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAEF0NBGLZqmzeUN1uUta4x9hBJf63Pb5g&callback=initMap")
-    window.initMap = this.initMap
   }
 
   getVenues = () => {
@@ -29,10 +23,9 @@ class App extends Component {
 
     axios.get(endpoint + new URLSearchParams(parameters))
       .then(response => {
-        console.log(response.data.response.groups[0].items)
         this.setState({
           venues: response.data.response.groups[0].items
-        })
+        }, this.renderMap())
       })
       .catch(error => {
         console.log('ERROR! ' + error)
@@ -40,11 +33,39 @@ class App extends Component {
 
   }
 
+  renderMap = () => {
+    loadScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyAEF0NBGLZqmzeUN1uUta4x9hBJf63Pb5g&callback=initMap")
+    window.initMap = this.initMap
+  }
+
   initMap = () => {
+    let markers = []
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: -34.397, lng: 150.644},
       zoom: 8
-    });
+    })
+
+    var infowindow = new window.google.maps.InfoWindow({});
+
+    this.state.venues.map(myVenue => {
+      var contentString = `${myVenue.venue.name}`
+
+      var marker = new window.google.maps.Marker({
+        position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
+        map: map,
+        title: myVenue.venue.name
+      });
+
+      markers.push(marker)
+
+      marker.addListener('click', function() {
+        infowindow.setContent(contentString)
+        infowindow.open(map, marker);
+      });
+    })
+    this.setState({
+      markers
+    })
   }
 
   render() {
