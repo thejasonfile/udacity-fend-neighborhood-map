@@ -43,12 +43,13 @@ class App extends Component {
 
   initMap = () => {
     let markers = []
+    let buttons = []
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7075, lng: -74.01},
       zoom: 16
     })
 
-    var infowindow = new window.google.maps.InfoWindow({});
+    window.infowindow = new window.google.maps.InfoWindow({});
 
     this.state.venues.map(myVenue => {
       var contentString = `${myVenue.venue.name}`
@@ -62,31 +63,38 @@ class App extends Component {
       markers.push(marker)
 
       marker.addListener('click', function() {
-        infowindow.setContent(contentString)
-        infowindow.open(map, marker);
+        window.infowindow.setContent(contentString)
+        window.infowindow.open(map, marker);
       });
+
+      var button = window.document.createElement('button')
+      button.innerHTML = myVenue.venue.name
+      buttons.push(button)
+
+
+      button.addEventListener('click', function() {
+        window.infowindow.setContent(contentString)
+        window.infowindow.open(map, marker);
+      })
     })
+
     this.setState({
       markers,
       map
     })
-  }
 
-  onButtonClick = (e) => {
-    var infowindow = new window.google.maps.InfoWindow({});
-    const selectedMarker = this.state.markers.filter(marker => marker.title === e.target.value)
-    this.setState({ selectedMarker })
-    infowindow.setContent(selectedMarker[0].title)
-    infowindow.open(this.state.map, this.state.selectedMarker[0])
+    buttons.forEach(button => {
+      var buttonsDiv = window.document.getElementById('buttons')
+      buttonsDiv.appendChild(button)
+    })
   }
 
   render() {
     return (
       <main>
-        <button value="Gotan" onClick={this.onButtonClick}>Gotan</button>
-        <div id="map">
-
-        </div>
+        <div id="search"></div>
+        <div id="buttons"></div>
+        <div id="map"></div>
       </main>
     );
   }
