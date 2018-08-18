@@ -4,7 +4,10 @@ import axios from 'axios';
 class App extends Component {
 
   state = {
-    venues: []
+    map: {},
+    venues: [],
+    markers: [],
+    selectedMarker: {}
   }
 
   componentDidMount() {
@@ -42,7 +45,7 @@ class App extends Component {
     let markers = []
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: -34.397, lng: 150.644},
-      zoom: 8
+      zoom: 10.5
     })
 
     var infowindow = new window.google.maps.InfoWindow({});
@@ -64,13 +67,23 @@ class App extends Component {
       });
     })
     this.setState({
-      markers
+      markers,
+      map
     })
+  }
+
+  onButtonClick = (e) => {
+    var infowindow = new window.google.maps.InfoWindow({});
+    const selectedMarker = this.state.markers.filter(marker => marker.title === e.target.value)
+    this.setState({ selectedMarker })
+    infowindow.setContent(selectedMarker[0].title)
+    infowindow.open(this.state.map, this.state.selectedMarker[0])
   }
 
   render() {
     return (
       <main>
+        <button value="Circa" onClick={this.onButtonClick}>Circa</button>
         <div id="map">
 
         </div>
