@@ -11,17 +11,16 @@ class App extends Component {
   state = {
     map: {},
     venues: [],
-    markers: [],
+    filteredVenues: [],
     selectedMarker: {},
     input: '',
-    filteredVenues: []
   }
 
   componentDidMount() {
-    this.getVenues()
+    this.getAllVenues()
   }
 
-  getVenues = () => {
+  getAllVenues = () => {
     const endpoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
       client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
@@ -55,50 +54,58 @@ class App extends Component {
       zoom: 16
     })
 
-    this.renderDetails(map)
+    this.setState({
+      map
+    })
+
+    this.createMarkers(this.state.venues, this.state.map)
+    this.createButtons(this.state.venues, this.state.map)
+    this.renderDetails()
   }
 
-  renderDetails = (map, venues=this.state.venues) => {
-    console.log('renderDetails called')
+  createMarkers = (venues, map) => {
     let markers = []
-    let buttons = []
     window.infowindow = new window.google.maps.InfoWindow({});
 
-    this.state.venues.map(myVenue => {
-      var contentString = `${myVenue.venue.name}`
+    venues.map(myVenue => {
+      let contentString = `${myVenue.venue.name}`
 
-      var marker = new window.google.maps.Marker({
+      let marker = new window.google.maps.Marker({
         position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
         map: map,
-        title: myVenue.venue.name
+        title: myVenue.venue.name,
+        visible: false
       });
-
-      markers.push(marker)
 
       marker.addListener('click', function() {
         window.infowindow.setContent(contentString)
         window.infowindow.open(map, marker);
       });
 
-      var button = window.document.createElement('button')
+      markers.push(marker)
+
+      myVenue.marker = marker
+
+    })
+  }
+
+  createButtons = (venues, map) => {
+    let buttons = []
+    const buttonsDiv = window.document.getElementById('buttons')
+
+    venues.map(myVenue => {
+      let contentString = `${myVenue.venue.name}`
+      let button = window.document.createElement('button')
+      let marker = myVenue.marker
       button.innerHTML = myVenue.venue.name
       buttons.push(button)
-
 
       button.addEventListener('click', function() {
         window.infowindow.setContent(contentString)
         window.infowindow.open(map, marker);
       })
-    })
 
-    this.setState({
-      markers,
-      map
-    })
-
-    buttons.forEach(button => {
-      var buttonsDiv = window.document.getElementById('buttons')
-      buttonsDiv.appendChild(button)
+      myVenue.button = button
     })
   }
 
@@ -110,8 +117,18 @@ class App extends Component {
     this.filterVenues(e.target.value)
   }
 
-  filterVenues = (input) => {
+  filterVenues = (input=this.state.input) => {
+    let venues = this.state.venues
+    if (input.length > 0) {
+      let filteredVenues = venues.filter(myVenue => {
+        myVenue.venue.name === input
+      })
+      console.log(filteredVenues)
+      this.renderDetails(this.state.map, filteredVenues)
+    }
+  }
 
+  renderDetails = () => {
 
   }
 
