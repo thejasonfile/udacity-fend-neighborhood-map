@@ -1,13 +1,19 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+/*
+ * Instructions on adding and using Google API to React are from here:
+ * https://www.youtube.com/watch?v=ywdxLNjhBYw&t=134s
+ */
+
 class App extends Component {
 
   state = {
     map: {},
     venues: [],
     markers: [],
-    selectedMarker: {}
+    selectedMarker: {},
+    input: ''
   }
 
   componentDidMount() {
@@ -89,10 +95,19 @@ class App extends Component {
     })
   }
 
+  onInputChange = (e) => {
+    e.preventDefault()
+    this.setState({
+      input: e.target.value
+    })
+  }
+
   render() {
     return (
       <main>
-        <div id="search"></div>
+        <div id="search">
+          <input type="text" value={this.state.input} onChange={this.onInputChange} />
+        </div>
         <div id="buttons"></div>
         <div id="map"></div>
       </main>
