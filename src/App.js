@@ -13,7 +13,8 @@ class App extends Component {
     venues: [],
     markers: [],
     selectedMarker: {},
-    input: ''
+    input: '',
+    filteredVenues: []
   }
 
   componentDidMount() {
@@ -48,13 +49,19 @@ class App extends Component {
   }
 
   initMap = () => {
-    let markers = []
-    let buttons = []
+    console.log('initMap called')
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7075, lng: -74.01},
       zoom: 16
     })
 
+    this.renderDetails(map)
+  }
+
+  renderDetails = (map, venues=this.state.venues) => {
+    console.log('renderDetails called')
+    let markers = []
+    let buttons = []
     window.infowindow = new window.google.maps.InfoWindow({});
 
     this.state.venues.map(myVenue => {
@@ -100,6 +107,12 @@ class App extends Component {
     this.setState({
       input: e.target.value
     })
+    this.filterVenues(e.target.value)
+  }
+
+  filterVenues = (input) => {
+
+
   }
 
   render() {
