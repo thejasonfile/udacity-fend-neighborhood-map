@@ -10,7 +10,7 @@ class App extends Component {
 
   state = {
     map: {},
-    venues: [],
+    allVenues: [],
     filteredVenues: [],
     selectedMarker: {},
     input: '',
@@ -33,7 +33,7 @@ class App extends Component {
     axios.get(endpoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
-          venues: response.data.response.groups[0].items
+          allVenues: response.data.response.groups[0].items
         }, this.renderMap())
       })
       .catch(error => {
@@ -48,7 +48,6 @@ class App extends Component {
   }
 
   initMap = () => {
-    console.log('initMap called')
     const map = new window.google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7075, lng: -74.01},
       zoom: 16
@@ -58,12 +57,12 @@ class App extends Component {
       map
     })
 
-    this.createMarkers(this.state.venues, this.state.map)
-    this.createButtons(this.state.venues, this.state.map)
-    this.renderDetails()
+    this.createMarkers(this.state.allVenues)
+    this.createButtons(this.state.allVenues)
   }
 
-  createMarkers = (venues, map) => {
+  createMarkers = (venues) => {
+    let map = this.state.map
     let markers = []
     window.infowindow = new window.google.maps.InfoWindow({});
 
@@ -72,9 +71,8 @@ class App extends Component {
 
       let marker = new window.google.maps.Marker({
         position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
-        map: map,
         title: myVenue.venue.name,
-        visible: false
+        visible: true
       });
 
       marker.addListener('click', function() {
@@ -85,14 +83,14 @@ class App extends Component {
       markers.push(marker)
 
       myVenue.marker = marker
-
     })
+    this.showMarkers()
   }
 
   createButtons = (venues, map) => {
     let buttons = []
     const buttonsDiv = window.document.getElementById('buttons')
-
+    debugger
     venues.map(myVenue => {
       let contentString = `${myVenue.venue.name}`
       let button = window.document.createElement('button')
@@ -118,18 +116,19 @@ class App extends Component {
   }
 
   filterVenues = (input=this.state.input) => {
-    let venues = this.state.venues
-    if (input.length > 0) {
-      let filteredVenues = venues.filter(myVenue => {
-        myVenue.venue.name === input
-      })
-      console.log(filteredVenues)
-      this.renderDetails(this.state.map, filteredVenues)
-    }
+    let index = input.length
+    let venues = this.state.allVenues
+    let filteredVenues = venues.filter(venue => {
+      let venueSub = venue.venue.name.toLowerCase().substring(0, index)
+      return input.toLowerCase() === venueSub
+    })
+    this.setState({ filteredVenues })
   }
 
-  renderDetails = () => {
-
+  showMarkers = () => {
+    let venues = this.state.filteredVenues || this.state.allVenues
+    let venuesWithMarkers = venues.map(venue => venue.marker.setMap(this.state.map))
+    this.setState({ allVenues: venuesWithMarkers })
   }
 
   render() {
