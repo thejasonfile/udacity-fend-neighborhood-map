@@ -9,10 +9,11 @@ import axios from 'axios';
 class App extends Component {
 
   state = {
-    map: {},
-    allVenues: [],
-    filteredVenues: [],
-    selectedMarker: {},
+    map: null,
+    allVenues: null,
+    filteredVenues: null,
+    markers: null,
+    selectedMarker: null,
     input: '',
   }
 
@@ -56,12 +57,34 @@ class App extends Component {
     this.setState({
       map
     })
+
+    this.renderMarkers(map)
+  }
+
+  renderMarkers = (map) => {
+    let venues = this.state.allVenues
+    let markers = []
+    venues.map(venue => {
+      let lat = venue.venue.location.lat
+      let lng = venue.venue.location.lng
+      let marker = new window.google.maps.Marker({
+        position: {lat, lng},
+        title: venue.venue.name,
+        map
+      });
+      markers.push(marker)
+    })
+    this.setState({ markers })
+  }
+
+  filterVenues = () => {
+    
   }
 
   onInputChange = (e) => {
     e.preventDefault()
     this.setState({
-      input: e.target.value
+      input: e.target.value,
     })
   }
 
