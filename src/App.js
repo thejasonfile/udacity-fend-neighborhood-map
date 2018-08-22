@@ -58,11 +58,11 @@ class App extends Component {
       map
     })
 
-    this.renderMarkers(map)
+    this.createMarkers(map)
   }
 
-  renderMarkers = (map) => {
-    let venues = this.state.allVenues
+  createMarkers = (map) => {
+    let venues = this.state.filteredVenues || this.state.allVenues
     let markers = []
     venues.map(venue => {
       let lat = venue.venue.location.lat
@@ -77,14 +77,25 @@ class App extends Component {
     this.setState({ markers })
   }
 
-  filterVenues = () => {
-    
-  }
-
   onInputChange = (e) => {
     e.preventDefault()
     this.setState({
       input: e.target.value,
+    })
+    this.filterMarkers(e.target.value)
+  }
+
+  filterMarkers = (input) => {
+    let markers = this.state.markers
+    let map = this.state.map
+    let index = input.length
+    markers.map(marker => {
+      let markerTitleSubstring = marker.title.toLowerCase().substring(0, index)
+      if (markerTitleSubstring === input) {
+        marker.setMap(map)
+      } else {
+        marker.setMap(null)
+      }
     })
   }
 
@@ -94,7 +105,8 @@ class App extends Component {
         <div id="search">
           <input type="text" value={this.state.input} onChange={this.onInputChange} />
         </div>
-        <div id="buttons"></div>
+        <div id="buttons">
+        </div>
         <div id="map"></div>
       </main>
     );
