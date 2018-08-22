@@ -56,55 +56,6 @@ class App extends Component {
     this.setState({
       map
     })
-
-    this.createMarkers(this.state.allVenues)
-    this.createButtons(this.state.allVenues)
-  }
-
-  createMarkers = (venues) => {
-    let map = this.state.map
-    let markers = []
-    window.infowindow = new window.google.maps.InfoWindow({});
-
-    venues.map(myVenue => {
-      let contentString = `${myVenue.venue.name}`
-
-      let marker = new window.google.maps.Marker({
-        position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
-        title: myVenue.venue.name,
-        visible: true
-      });
-
-      marker.addListener('click', function() {
-        window.infowindow.setContent(contentString)
-        window.infowindow.open(map, marker);
-      });
-
-      markers.push(marker)
-
-      myVenue.marker = marker
-    })
-    this.showMarkers()
-  }
-
-  createButtons = (venues, map) => {
-    let buttons = []
-    const buttonsDiv = window.document.getElementById('buttons')
-    debugger
-    venues.map(myVenue => {
-      let contentString = `${myVenue.venue.name}`
-      let button = window.document.createElement('button')
-      let marker = myVenue.marker
-      button.innerHTML = myVenue.venue.name
-      buttons.push(button)
-
-      button.addEventListener('click', function() {
-        window.infowindow.setContent(contentString)
-        window.infowindow.open(map, marker);
-      })
-
-      myVenue.button = button
-    })
   }
 
   onInputChange = (e) => {
@@ -112,23 +63,6 @@ class App extends Component {
     this.setState({
       input: e.target.value
     })
-    this.filterVenues(e.target.value)
-  }
-
-  filterVenues = (input=this.state.input) => {
-    let index = input.length
-    let venues = this.state.allVenues
-    let filteredVenues = venues.filter(venue => {
-      let venueSub = venue.venue.name.toLowerCase().substring(0, index)
-      return input.toLowerCase() === venueSub
-    })
-    this.setState({ filteredVenues })
-  }
-
-  showMarkers = () => {
-    let venues = this.state.filteredVenues || this.state.allVenues
-    let venuesWithMarkers = venues.map(venue => venue.marker.setMap(this.state.map))
-    this.setState({ allVenues: venuesWithMarkers })
   }
 
   render() {
