@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 /*
- * Instructions on adding and using Google API to React are from here:
+ * Instructions on adding and using Google API with React are from here:
  * https://www.youtube.com/watch?v=ywdxLNjhBYw&t=134s
  */
 
@@ -64,23 +64,23 @@ class App extends Component {
   }
 
   createMarkers = (map) => {
-    let venues = this.state.filteredVenues || this.state.allVenues
+    let {filteredVenues, allVenues, infoWindow} = this.state
+    let venues = filteredVenues || allVenues
     let markers = []
-    let infowindow = this.state.infoWindow
     venues.map(venue => {
-      let lat = venue.venue.location.lat
-      let lng = venue.venue.location.lng
-      let contentString = `${venue.venue.name}`
+      let {lat, lng} = venue.venue.location
+      let {name} = venue.venue
+      let contentString = `${name}`
       let marker = new window.google.maps.Marker({
         position: {lat, lng},
-        title: venue.venue.name,
+        title: name,
         map
       });
       markers.push(marker)
 
       marker.addListener('click', function() {
-        infowindow.setContent(contentString)
-        infowindow.open(map, marker);
+        infoWindow.setContent(contentString)
+        infoWindow.open(map, marker);
       });
     })
     this.setState({ markers })
@@ -96,8 +96,7 @@ class App extends Component {
   }
 
   filterMarkers = (input) => {
-    let markers = this.state.markers
-    let map = this.state.map
+    let {markers, map} = this.state
     let index = input.length
     markers.map(marker => {
       let markerTitleSubstring = marker.title.toLowerCase().substring(0, index)
@@ -111,9 +110,10 @@ class App extends Component {
 
   filterList = (input) => {
     let index = input.length
-    let venues = this.state.allVenues
-    let filteredVenues = venues.filter(venue => {
-      let venueTitleSubstring = venue.venue.name.toLowerCase().substring(0, index)
+    let {allVenues} = this.state
+    let filteredVenues = allVenues.filter(venue => {
+      let {name} = venue.venue
+      let venueTitleSubstring = name.toLowerCase().substring(0, index)
       return venueTitleSubstring === input
     })
     this.setState({ filteredVenues })
@@ -144,11 +144,10 @@ class App extends Component {
   selectMarker(e) {
     e.preventDefault()
     let clickedItem = e.target.innerHTML
-    let markers = this.state.markers
-    let infowindow = this.state.infoWindow
+    let {markers, infoWindow, map} = this.state
     let selectedMarker = markers.filter(marker => marker.title === clickedItem)
-    infowindow.setContent(clickedItem)
-    infowindow.open(this.state.map, selectedMarker[0])
+    infoWindow.setContent(clickedItem)
+    infoWindow.open(map, selectedMarker[0])
   }
 
   render() {
@@ -157,7 +156,6 @@ class App extends Component {
         <div id="search">
           <input
             type="text"
-            value={this.state.input}
             onChange={this.onInputChange}
           />
         </div>
