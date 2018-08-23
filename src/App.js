@@ -64,16 +64,23 @@ class App extends Component {
 
   createMarkers = (map) => {
     let venues = this.state.filteredVenues || this.state.allVenues
+    let infowindow = new window.google.maps.InfoWindow({});
     let markers = []
     venues.map(venue => {
       let lat = venue.venue.location.lat
       let lng = venue.venue.location.lng
+      let contentString = `${venue.venue.name}`
       let marker = new window.google.maps.Marker({
         position: {lat, lng},
         title: venue.venue.name,
         map
       });
       markers.push(marker)
+
+      marker.addListener('click', function() {
+        infowindow.setContent(contentString)
+        infowindow.open(map, marker);
+      });
     })
     this.setState({ markers })
   }
