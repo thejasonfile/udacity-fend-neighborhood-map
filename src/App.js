@@ -153,20 +153,18 @@ class App extends Component {
   render() {
     return (
       <div id="container">
-        <header>
-          <div id="title">
+        <header id="title">
             <h1>Points of Interest in Lower Manhattan</h1>
-          </div>
         </header>
         <main>
-          <div id="filter">
+          <section id="filter">
             <label htmlFor="filter">Filter</label>
             <input
               id="filter"
               type="text"
               onChange={this.onInputChange}
             />
-          </div>
+          </section>
           <section id="info">
             <div id="locations">
                 {this.renderList()}

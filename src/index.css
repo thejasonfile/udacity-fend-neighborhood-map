@@ -55,3 +55,42 @@ html, body {
   height: 80vh;
   margin: 20px;
 }
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width: 1070px) {
+  #filter input {
+    width: 80%
+  }
+
+  #info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #locations {
+    margin-right: 0;
+  }
+
+  #info ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  #info li {
+    margin: 3px;
+  }
+}
+
+@media screen and (max-width: 570px) {
+  #title h1 {
+    font-size: 26px;
+  }
+}
+
+@media screen and (max-width: 464px) {
+  #title h1 {
+    font-size: 22px;
+  }
+}
