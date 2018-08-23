@@ -100,7 +100,7 @@ class App extends Component {
     let index = input.length
     markers.map(marker => {
       let markerTitleSubstring = marker.title.toLowerCase().substring(0, index)
-      if (markerTitleSubstring === input) {
+      if (markerTitleSubstring === input.toLowerCase()) {
         marker.setMap(map)
       } else {
         marker.setMap(null)
@@ -114,7 +114,7 @@ class App extends Component {
     let filteredVenues = allVenues.filter(venue => {
       let {name} = venue.venue
       let venueTitleSubstring = name.toLowerCase().substring(0, index)
-      return venueTitleSubstring === input
+      return venueTitleSubstring === input.toLowerCase()
     })
     this.setState({ filteredVenues })
   }
@@ -143,9 +143,9 @@ class App extends Component {
 
   selectMarker(e) {
     e.preventDefault()
-    let clickedItem = e.target.innerHTML
+    let clickedItem = e.target
     let {markers, infoWindow, map} = this.state
-    let selectedMarker = markers.filter(marker => marker.title === clickedItem)
+    let selectedMarker = markers.filter(marker => marker.title === clickedItem.innerHTML)
     infoWindow.setContent(clickedItem)
     infoWindow.open(map, selectedMarker[0])
   }
