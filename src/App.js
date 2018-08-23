@@ -119,6 +119,15 @@ class App extends Component {
     this.setState({ filteredVenues })
   }
 
+  selectListItem(e) {
+    e.preventDefault()
+    let clickedItem = e.target
+    let {markers, infoWindow, map} = this.state
+    let selectedMarker = markers.filter(marker => marker.title === clickedItem.innerHTML)
+    infoWindow.setContent(clickedItem.innerHTML)
+    infoWindow.open(map, selectedMarker[0])
+  }
+
   renderList = () => {
     if(!this.state.filteredVenues) {
       return (
@@ -131,7 +140,7 @@ class App extends Component {
             return (
               <li
                 key={index}
-                onClick={(e) => this.selectMarker(e)}
+                onClick={(e) => this.selectListItem(e)}
               >{venue.venue.name}
               </li>
             )
@@ -139,15 +148,6 @@ class App extends Component {
         </ul>
       )
     }
-  }
-
-  selectMarker(e) {
-    e.preventDefault()
-    let clickedItem = e.target
-    let {markers, infoWindow, map} = this.state
-    let selectedMarker = markers.filter(marker => marker.title === clickedItem.innerHTML)
-    infoWindow.setContent(clickedItem)
-    infoWindow.open(map, selectedMarker[0])
   }
 
   render() {
@@ -160,7 +160,7 @@ class App extends Component {
         </header>
         <main>
           <div id="filter">
-            <label for="filter">Filter</label>
+            <label htmlFor="filter">Filter</label>
             <input
               id="filter"
               type="text"
