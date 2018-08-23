@@ -64,7 +64,7 @@ class App extends Component {
 
   createMarkers = (map) => {
     let venues = this.state.filteredVenues || this.state.allVenues
-    let infowindow = new window.google.maps.InfoWindow({});
+    window.infowindow = new window.google.maps.InfoWindow({});
     let markers = []
     venues.map(venue => {
       let lat = venue.venue.location.lat
@@ -78,8 +78,8 @@ class App extends Component {
       markers.push(marker)
 
       marker.addListener('click', function() {
-        infowindow.setContent(contentString)
-        infowindow.open(map, marker);
+        window.infowindow.setContent(contentString)
+        window.infowindow.open(map, marker);
       });
     })
     this.setState({ markers })
@@ -127,15 +127,26 @@ class App extends Component {
       return (
         <ul>
           {this.state.filteredVenues.map((venue, index) => {
-            return <li key={index} onClick={this.selectMarker}>{venue.venue.name}</li>
+            return (
+              <li
+                key={index}
+                onClick={(e) => this.selectMarker(e)}
+              >{venue.venue.name}
+              </li>
+            )
           })}
         </ul>
       )
     }
   }
 
-  selectMarker() {
-    console.log('hi')
+  selectMarker(e) {
+    e.preventDefault()
+    let clickedItem = e.target.innerHTML
+    let markers = this.state.markers
+    let selectedMarker = markers.filter(marker => marker.title === clickedItem)
+    window.infowindow.setContent(clickedItem)
+    window.infowindow.open(this.state.map, selectedMarker[0])
   }
 
   render() {
