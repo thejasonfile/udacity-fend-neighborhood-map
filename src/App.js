@@ -51,7 +51,7 @@ class App extends Component {
 
   initMap = () => {
     const map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: 40.7075, lng: -74.01},
+      center: {lat: 40.7075, lng: -74.012},
       zoom: 16
     })
 
@@ -152,18 +152,29 @@ class App extends Component {
 
   render() {
     return (
-      <main>
-        <div id="search">
-          <input
-            type="text"
-            onChange={this.onInputChange}
-          />
-        </div>
-        <div id="locations">
-            {this.renderList()}
-        </div>
-        <div id="map"></div>
-      </main>
+      <div id="container">
+        <header>
+          <div id="title">
+            <h1>Points of Interest in Lower Manhattan</h1>
+          </div>
+        </header>
+        <main>
+          <div id="filter">
+            <label for="filter">Filter</label>
+            <input
+              id="filter"
+              type="text"
+              onChange={this.onInputChange}
+            />
+          </div>
+          <section id="info">
+            <div id="locations">
+                {this.renderList()}
+            </div>
+            <div id="map"></div>
+          </section>
+        </main>
+      </div>
     );
   }
 }

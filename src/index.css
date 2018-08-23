@@ -5,6 +5,53 @@ html, body {
   font-family: sans-serif;
 }
 
+ body {
+   display: flex;
+ }
+
+#container {
+  width: 100vw;
+}
+
+#info, #title, #filter {
+  display: flex;
+  flex-direction: row
+}
+
+#title {
+  justify-content: center;
+}
+
+#filter {
+  justify-content: center;
+  align-items: center;
+}
+
+#filter input {
+  padding: 10px;
+  margin-left: 20px;
+  width: 90%;
+  font-size: 20px;
+  border-radius: 20px;
+  border: 3px solid black;
+}
+
+#info ul {
+  list-style: none;
+}
+
+#locations {
+  margin-right: 20px;
+}
+
+#locations li {
+  border: 1px solid black;
+  padding: 5px;
+  cursor: pointer;
+}
+
 #map {
-  height: 100vh
+  width: 100%;
+  height: 80vh;
+  margin: 20px;
 }
