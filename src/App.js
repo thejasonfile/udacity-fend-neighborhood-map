@@ -34,7 +34,8 @@ class App extends Component {
     axios.get(endpoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
-          allVenues: response.data.response.groups[0].items
+          allVenues: response.data.response.groups[0].items,
+          filteredVenues: response.data.response.groups[0].items
         }, this.renderMap())
       })
       .catch(error => {
@@ -83,6 +84,7 @@ class App extends Component {
       input: e.target.value,
     })
     this.filterMarkers(e.target.value)
+    this.filterList(e.target.value)
   }
 
   filterMarkers = (input) => {
@@ -99,13 +101,48 @@ class App extends Component {
     })
   }
 
+  filterList = (input) => {
+    let index = input.length
+    let venues = this.state.allVenues
+    let filteredVenues = venues.filter(venue => {
+      let venueTitleSubstring = venue.venue.name.toLowerCase().substring(0, index)
+      return venueTitleSubstring === input
+    })
+    this.setState({ filteredVenues })
+  }
+
+  renderList = () => {
+    if(!this.state.filteredVenues) {
+      return (
+        <div>Loading...</div>
+      )
+    } else {
+      return (
+        <ul>
+          {this.state.filteredVenues.map((venue, index) => {
+            return <li key={index} onClick={this.selectMarker}>{venue.venue.name}</li>
+          })}
+        </ul>
+      )
+    }
+  }
+
+  selectMarker() {
+    console.log('hi')
+  }
+
   render() {
     return (
       <main>
         <div id="search">
-          <input type="text" value={this.state.input} onChange={this.onInputChange} />
+          <input
+            type="text"
+            value={this.state.input}
+            onChange={this.onInputChange}
+          />
         </div>
-        <div id="buttons">
+        <div id="locations">
+            {this.renderList()}
         </div>
         <div id="map"></div>
       </main>
