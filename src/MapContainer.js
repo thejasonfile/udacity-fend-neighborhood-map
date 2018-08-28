@@ -15,23 +15,6 @@ class MapContainer extends Component {
     this.getAllVenues()
   }
 
-  onInputChange = e => {
-    this.setState({ input: e.target.value })
-  }
-
-  loadMap() {
-    if (this.props.google) {
-      const {google} = this.props
-
-      this.map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: 40.7218, lng: -73.9998 },
-        zoom: 14
-      })
-    }
-
-    this.addMarkers()
-  }
-
   getAllVenues = () => {
     const endpoint = "https://api.myjson.com/bins/fo41s"
     // const parameters = {
@@ -64,6 +47,19 @@ class MapContainer extends Component {
 
   }
 
+  loadMap() {
+    if (this.props.google) {
+      const {google} = this.props
+
+      this.map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 40.7218, lng: -73.9998 },
+        zoom: 14
+      })
+    }
+
+    this.addMarkers()
+  }
+
   addMarkers = () => {
     const {google} = this.props
     let {infoWindow, allVenues} = this.state
@@ -90,6 +86,10 @@ class MapContainer extends Component {
     this.map.fitBounds(bounds)
   }
 
+  onInputChange = e => {
+    this.setState({ input: e.target.value })
+  }
+
   createInfoWindow = (marker, infoWindow) => {
     infoWindow.setContent(`<h3>${marker.title}</h3>`)
     infoWindow.open(this.map, marker)
@@ -105,6 +105,10 @@ class MapContainer extends Component {
           <section id="info">
             <LocationList
               venues = {this.state.allVenues}
+              input = {this.state.input}
+              markers = {this.state.markers}
+              infoWindow = {this.state.infoWindow}
+              createInfoWindow = {this.createInfoWindow}
             />
             <div id="map"></div>
           </section>
