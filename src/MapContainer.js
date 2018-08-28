@@ -93,12 +93,21 @@ class MapContainer extends Component {
   onInputChange = e => {
     this.setState({ input: e.target.value })
     this.filterList(e.target.value)
+    this.filterMarkers(e.target.value)
   }
 
   filterList = input => {
     let {allVenues} = this.state
     let filteredVenues = allVenues.filter(venue => venue.venue.name.toLowerCase().includes(input.toLowerCase()))
     this.setState({ filteredVenues })
+  }
+
+  filterMarkers = input => {
+    let {markers, infoWindow} = this.state
+    infoWindow.close()
+    let filteredMarkers = markers.filter(marker => marker.title.toLowerCase().includes(input.toLowerCase()))
+    markers.forEach(marker => marker.setVisible(false))
+    filteredMarkers.forEach(marker => marker.setVisible(true))
   }
 
   createInfoWindow = (marker, infoWindow) => {
