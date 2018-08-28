@@ -8,10 +8,10 @@ class LocationList extends Component {
   }
 
   render() {
-    const {venues} = this.props
+    const {filteredVenues} = this.props
     return (
       <div id="locations">
-        <ul className="locations-list">{venues.map((v, i) => (
+        <ul className="locations-list">{filteredVenues.map((v, i) => (
           <li
             key={i}
             onClick={this.onListClick}
