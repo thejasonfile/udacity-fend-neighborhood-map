@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 
 class LocationList extends Component {
   onListClick = e => {
-    const {markers, infoWindow, createInfoWindow} = this.props
+    const {markers, infoWindow, createInfoWindow, animateMarker} = this.props
     const filteredMarker = markers.filter(m => m.title.toLowerCase() === e.target.innerText.toLowerCase())
+    animateMarker(filteredMarker[0])
     createInfoWindow(filteredMarker[0], infoWindow)
   }
 

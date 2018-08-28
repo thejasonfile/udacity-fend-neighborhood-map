@@ -77,6 +77,7 @@ class MapContainer extends Component {
       })
 
       marker.addListener('click', () => {
+        this.animateMarker(marker)
         this.createInfoWindow(marker, infoWindow)
       })
 
@@ -105,9 +106,17 @@ class MapContainer extends Component {
   filterMarkers = input => {
     let {markers, infoWindow} = this.state
     infoWindow.close()
+    this.animateMarker()
     let filteredMarkers = markers.filter(marker => marker.title.toLowerCase().includes(input.toLowerCase()))
     markers.forEach(marker => marker.setVisible(false))
     filteredMarkers.forEach(marker => marker.setVisible(true))
+  }
+
+  animateMarker = marker => {
+    let {google} = this.props
+    let {markers} = this.state
+    markers.forEach(marker => marker.setAnimation(null))
+    marker ? marker.setAnimation(google.maps.Animation.BOUNCE) : null
   }
 
   createInfoWindow = (marker, infoWindow) => {
@@ -128,6 +137,7 @@ class MapContainer extends Component {
               markers = {this.state.markers}
               infoWindow = {this.state.infoWindow}
               createInfoWindow = {this.createInfoWindow}
+              animateMarker = {this.animateMarker}
             />
             <div id="map"></div>
           </section>
