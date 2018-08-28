@@ -26,7 +26,6 @@ class MapContainer extends Component {
   }
 
   getAllVenues = () => {
-    const appThis = this
     const endpoint = "https://api.myjson.com/bins/fo41s"
     // const parameters = {
     //   client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
@@ -61,7 +60,8 @@ class MapContainer extends Component {
   addMarkers = () => {
     const {google} = this.props
     let {infoWindow, allVenues} = this.state
-    const bounds = new google.maps.LatLngBounds();
+    const bounds = new google.maps.LatLngBounds()
+
     allVenues.forEach((v, i) => {
       const marker = new google.maps.Marker({
         position: {lat: v.venue.location.lat, lng: v.venue.location.lng},
@@ -69,7 +69,9 @@ class MapContainer extends Component {
         title: v.venue.name
       })
 
-      marker.addListener('click', () => {this.populateInfoWindow(marker, infoWindow)})
+      marker.addListener('click', () => {
+        this.createInfoWindow(marker, infoWindow)
+      })
 
       this.setState(state => ({
          markers: [...state.markers, marker]
@@ -79,6 +81,11 @@ class MapContainer extends Component {
     })
 
     this.map.fitBounds(bounds)
+  }
+
+  createInfoWindow = (marker, infoWindow) => {
+    infoWindow.setContent(`<h3>${marker.title}</h3>`)
+    infoWindow.open(this.map, marker)
   }
 
   render() {
