@@ -3,11 +3,12 @@ import axios from 'axios'
 
 class MapContainer extends Component {
   state = {
-    allVenues: []
+    allVenues: [],
+    infoWindow: new this.props.google.maps.InfoWindow(),
+    markers: []
   }
 
   componentDidMount() {
-    this.loadMap()
     this.getAllVenues()
   }
 
@@ -20,9 +21,12 @@ class MapContainer extends Component {
         zoom: 14
       })
     }
+
+    this.addMarkers()
   }
 
   getAllVenues = () => {
+    const appThis = this
     const endpoint = "https://api.myjson.com/bins/fo41s"
     // const parameters = {
     //   client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
@@ -40,7 +44,7 @@ class MapContainer extends Component {
           allVenues: response.data.response.groups[0].items,
         })
       })
-
+      .then(() => this.loadMap())
     // axios.get(endpoint + new URLSearchParams(parameters))
     //   .then(response => {
     //     this.setState({
@@ -51,6 +55,30 @@ class MapContainer extends Component {
     //   .catch(error => {
     //     console.log('ERROR! ' + error)
     //   })
+
+  }
+
+  addMarkers = () => {
+    const {google} = this.props
+    let {infoWindow, allVenues} = this.state
+    const bounds = new google.maps.LatLngBounds();
+    allVenues.forEach((v, i) => {
+      const marker = new google.maps.Marker({
+        position: {lat: v.venue.location.lat, lng: v.venue.location.lng},
+        map: this.map,
+        title: v.venue.name
+      })
+
+      marker.addListener('click', () => {this.populateInfoWindow(marker, infoWindow)})
+
+      this.setState(state => ({
+         markers: [...state.markers, marker]
+       }))
+
+      bounds.extend(marker.position)
+    })
+
+    this.map.fitBounds(bounds)
   }
 
   render() {
