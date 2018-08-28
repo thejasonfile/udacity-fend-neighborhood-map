@@ -1,15 +1,22 @@
 import React, { Component } from 'react'
+import LocationList from './LocationList'
+import Filter from './Filter'
 import axios from 'axios'
 
 class MapContainer extends Component {
   state = {
     allVenues: [],
     infoWindow: new this.props.google.maps.InfoWindow(),
-    markers: []
+    markers: [],
+    input: ''
   }
 
   componentDidMount() {
     this.getAllVenues()
+  }
+
+  onInputChange = e => {
+    this.setState({ input: e.target.value })
   }
 
   loadMap() {
@@ -90,7 +97,16 @@ class MapContainer extends Component {
 
   render() {
     return (
-      <div id="map"></div>
+      <section>
+        <Filter
+          onInputChange = {this.onInputChange}
+          input = {this.state.input}
+        />
+        <LocationList 
+          venues = {this.state.allVenues}
+        />
+        <div id="map"></div>
+      </section>
     )
   }
 }

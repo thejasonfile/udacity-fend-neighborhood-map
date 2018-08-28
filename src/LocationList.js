@@ -3,7 +3,9 @@ import React, { Component } from 'react';
 class LocationList extends Component {
   render() {
     return (
-      <div>LocationList...</div>
+      <ul>{this.props.venues.map((v, i) => (
+        <li key={i}>{v.venue.name}</li>
+      ))}</ul>
     )
   }
 }
