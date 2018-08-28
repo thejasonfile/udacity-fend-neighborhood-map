@@ -9,7 +9,8 @@ class MapContainer extends Component {
     filteredVenues: [],
     infoWindow: new this.props.google.maps.InfoWindow(),
     markers: [],
-    input: ''
+    input: '',
+    additionalInfo: null
   }
 
   componentDidMount() {
@@ -78,7 +79,7 @@ class MapContainer extends Component {
 
       marker.addListener('click', () => {
         this.animateMarker(marker)
-        this.createInfoWindow(marker, infoWindow)
+        this.getAdditionalInfo(marker, infoWindow)
       })
 
       this.setState(state => ({
@@ -95,6 +96,16 @@ class MapContainer extends Component {
     this.setState({ input: e.target.value })
     this.filterList(e.target.value)
     this.filterMarkers(e.target.value)
+  }
+
+  getAdditionalInfo = (marker, infoWindow) => {
+    console.log('get additional info')
+    const endpoint = "https://api.myjson.com/bins/fo41s"
+    axios.get(endpoint)
+      .then(response => {
+        this.setState({ additionalInfo: response.data.response.headerLocation })
+      })
+      .then(() => this.createInfoWindow(marker, infoWindow))
   }
 
   filterList = input => {
@@ -120,7 +131,7 @@ class MapContainer extends Component {
   }
 
   createInfoWindow = (marker, infoWindow) => {
-    infoWindow.setContent(`<h3>${marker.title}</h3>`)
+    infoWindow.setContent(`<h3>${marker.title}</h3><h4>${this.state.additionalInfo}</h4>`)
     infoWindow.open(this.map, marker)
   }
 
@@ -138,6 +149,7 @@ class MapContainer extends Component {
               infoWindow = {this.state.infoWindow}
               createInfoWindow = {this.createInfoWindow}
               animateMarker = {this.animateMarker}
+              getAdditionalInfo = {this.getAdditionalInfo}
             />
             <div id="map"></div>
           </section>
