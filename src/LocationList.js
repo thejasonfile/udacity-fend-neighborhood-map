@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 
 class LocationList extends Component {
   onListClick = e => {
-    const {markers, infoWindow} = this.props
+    const {markers, infoWindow, createInfoWindow} = this.props
     const filteredMarker = markers.filter(m => m.title.toLowerCase() === e.target.innerText.toLowerCase())
-    this.props.createInfoWindow(filteredMarker[0], infoWindow)
+    createInfoWindow(filteredMarker[0], infoWindow)
   }
 
   render() {
+    const {venues} = this.props
     return (
       <div id="locations">
-        <ul className="locations-list">{this.props.venues.map((v, i) => (
+        <ul className="locations-list">{venues.map((v, i) => (
           <li
             key={i}
             onClick={this.onListClick}

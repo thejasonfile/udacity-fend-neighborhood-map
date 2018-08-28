@@ -5,7 +5,7 @@ import axios from 'axios'
 
 class MapContainer extends Component {
   state = {
-    allVenues: [],
+    venues: [],
     infoWindow: new this.props.google.maps.InfoWindow(),
     markers: [],
     input: ''
@@ -30,14 +30,14 @@ class MapContainer extends Component {
     axios.get(endpoint)
       .then(response => {
         this.setState({
-          allVenues: response.data.response.groups[0].items,
+          venues: response.data.response.groups[0].items,
         })
       })
       .then(() => this.loadMap())
     // axios.get(endpoint + new URLSearchParams(parameters))
     //   .then(response => {
     //     this.setState({
-    //       allVenues: response.data.response.groups[0].items,
+    //       venues: response.data.response.groups[0].items,
     //       filteredVenues: response.data.response.groups[0].items
     //     }, this.renderMap())
     //   })
@@ -53,7 +53,7 @@ class MapContainer extends Component {
 
       this.map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 40.7218, lng: -73.9998 },
-        zoom: 14
+        zoom: 15
       })
     }
 
@@ -62,14 +62,16 @@ class MapContainer extends Component {
 
   addMarkers = () => {
     const {google} = this.props
-    let {infoWindow, allVenues} = this.state
+    let {infoWindow, venues} = this.state
     const bounds = new google.maps.LatLngBounds()
 
-    allVenues.forEach((v, i) => {
+    venues.forEach((v, i) => {
+      let {lat, lng} = v.venue.location
+      let {name} = v.venue
       const marker = new google.maps.Marker({
-        position: {lat: v.venue.location.lat, lng: v.venue.location.lng},
+        position: {lat, lng},
         map: this.map,
-        title: v.venue.name
+        title: name
       })
 
       marker.addListener('click', () => {
@@ -104,8 +106,7 @@ class MapContainer extends Component {
           />
           <section id="info">
             <LocationList
-              venues = {this.state.allVenues}
-              input = {this.state.input}
+              venues = {this.state.venues}
               markers = {this.state.markers}
               infoWindow = {this.state.infoWindow}
               createInfoWindow = {this.createInfoWindow}
