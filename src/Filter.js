@@ -6,7 +6,7 @@ class Filter extends Component {
       <section id="filter">
         <label htmlFor="filter">Filter</label>
         <input
-          id="filter"
+          id="filter-input"
           type="text"
           onChange={this.props.onInputChange}
           value={this.props.input}

@@ -98,14 +98,16 @@ class MapContainer extends Component {
   render() {
     return (
       <section>
-        <Filter
-          onInputChange = {this.onInputChange}
-          input = {this.state.input}
-        />
-        <LocationList 
-          venues = {this.state.allVenues}
-        />
-        <div id="map"></div>
+          <Filter
+            onInputChange = {this.onInputChange}
+            input = {this.state.input}
+          />
+          <section id="info">
+            <LocationList
+              venues = {this.state.allVenues}
+            />
+            <div id="map"></div>
+          </section>
       </section>
     )
   }
