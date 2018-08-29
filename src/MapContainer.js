@@ -71,8 +71,10 @@ class MapContainer extends Component {
 
   // Loads the Google map and calls addMarkers
   loadMap() {
-    if (!this.state.venuesError && this.props.google) {
-      const {google} = this.props
+    const mapContainerThis = this
+    const {google} = this.props
+    const {venuesError, infoWindow} = this.state
+    if (!venuesError && google) {
 
       this.map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 40.7218, lng: -73.9998 },
@@ -81,6 +83,15 @@ class MapContainer extends Component {
     } else {
       'there was an error'
     }
+
+    /* Add listener for clicking on map that closes infoWindow and stops marker
+     * animations.
+     */
+    this.map.addListener('click', () => {
+      const {markers} = mapContainerThis.state
+      markers.forEach(marker => marker.setAnimation(null))
+      infoWindow.close()
+    })
 
     this.addMarkers()
   }
@@ -204,7 +215,7 @@ class MapContainer extends Component {
     if (!this.state.photosError) {
       let photosString = ''
       this.state.photoURLs.forEach(photoURL => {
-        photosString += `<img src=${photoURL} />`
+        photosString += `<img src="${photoURL}" alt="${marker.title}" />`
       })
       infoWindow.setContent(`<h3>${marker.title}</h3><h4>${photosString}</h4>`)
       infoWindow.open(this.map, marker)
