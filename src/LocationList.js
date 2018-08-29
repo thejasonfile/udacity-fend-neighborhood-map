@@ -24,6 +24,7 @@ class LocationList extends Component {
           <li
             key={i}
             onClick={this.onListClick}
+            tabIndex="0"
           >
             {v.venue.name}
           </li>

@@ -7,7 +7,7 @@ const Filter = props => {
      * function.
      */
     <section id="filter">
-      <label htmlFor="filter">Filter</label>
+      <label htmlFor="filter-input">Filter</label>
       <input
         id="filter-input"
         type="text"
