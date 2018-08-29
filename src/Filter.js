@@ -1,19 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Filter extends Component {
-  render() {
-    return (
-      <section id="filter">
-        <label htmlFor="filter">Filter</label>
-        <input
-          id="filter-input"
-          type="text"
-          onChange={this.props.onInputChange}
-          value={this.props.input}
-        />
-      </section>
-    )
-  }
+const Filter = props => {
+  return (
+    /* Just an text field and label. The value of the text field is controlled
+     * by value of props.input and that is changed with the pros.onInputChange
+     * function.
+     */
+    <section id="filter">
+      <label htmlFor="filter">Filter</label>
+      <input
+        id="filter-input"
+        type="text"
+        onChange={props.onInputChange}
+        value={props.input}
+      />
+    </section>
+  )
 }
 
 export default Filter
