@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { GoogleApiWrapper } from 'google-maps-react'
 import MapContainer from './MapContainer'
 import Title from './Title'
 
-class App extends Component {
-  render() {
-    return (
-      <div id="container">
-        <Title />
-        <main>
-          <MapContainer
-            google = {this.props.google}
-          />
-        </main>
-      </div>
-    )
-  }
+const App = props => {
+  return (
+    <div id="container">
+      <Title />
+      <main>
+        <MapContainer
+          google = {props.google}
+        />
+      </main>
+    </div>
+  )
 }
 
 export default GoogleApiWrapper({
