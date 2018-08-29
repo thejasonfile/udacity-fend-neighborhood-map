@@ -41,17 +41,19 @@ class MapContainer extends Component {
           filteredVenues: response.data.response.groups[0].items,
         })
       })
+      // If there is an error fetching venue data add an error to the state
       .catch(error => {
         this.setState({ venuesError: error })
       })
       /* A second .then is chained so that we know the data from the API
-       * request has been returned before calling loadMap
+       * request has been returned before calling loadMap. If there is an error
+       * don't load the map. Instead render the error message section.
        */
       .then(() => {
         if(!this.state.venuesError) {
           this.loadMap()
         } else {
-          'There was an error'
+          this.renderError()
         }
       })
     // axios.get(endpoint + new URLSearchParams(parameters))
@@ -149,6 +151,7 @@ class MapContainer extends Component {
            }))
         })
       })
+      // If there is an error fetching photo data, add error to the state
       .catch(error => {
         this.setState({ photosError: error })
       })
@@ -197,6 +200,7 @@ class MapContainer extends Component {
 
   // Sets the content for an info window and opens it on the specific marker.
   createInfoWindow = (marker, infoWindow) => {
+    // If there is no error, render the photos
     if (!this.state.photosError) {
       let photosString = ''
       this.state.photoURLs.forEach(photoURL => {
@@ -204,12 +208,16 @@ class MapContainer extends Component {
       })
       infoWindow.setContent(`<h3>${marker.title}</h3><h4>${photosString}</h4>`)
       infoWindow.open(this.map, marker)
+      // If there is an error, render error message instead.
     } else {
       infoWindow.setContent(`<h3>${marker.title}</h3><h4>Can't get photos. Try agian later.</h4>`)
       infoWindow.open(this.map, marker)
     }
   }
 
+  /* Checks for an existing error. If there is one, then render the Error
+   * component with the message
+   */
   renderError = () => {
     if (this.state.venuesError) {
       return <Error
