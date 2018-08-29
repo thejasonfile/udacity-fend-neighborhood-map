@@ -61,6 +61,18 @@ html, body {
   margin: 20px;
 }
 
+#error {
+  display: flex;
+  width: 100%;
+  background: #fda4a4;
+  height: 100px;
+  border-radius: 15px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+}
+
 /* MEDIA QUERIES */
 
 @media screen and (max-width: 1070px) {

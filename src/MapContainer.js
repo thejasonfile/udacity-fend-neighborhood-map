@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import LocationList from './LocationList'
 import Filter from './Filter'
+import Error from './Error'
 import axios from 'axios'
 
 class MapContainer extends Component {
@@ -10,7 +11,9 @@ class MapContainer extends Component {
     infoWindow: new this.props.google.maps.InfoWindow(),
     markers: [],
     input: '',
-    photoURLs: []
+    photoURLs: [],
+    venuesError: '',
+    photosError: ''
   }
 
   //When the map is rendered an API call is made to fetch all venues.
@@ -38,10 +41,19 @@ class MapContainer extends Component {
           filteredVenues: response.data.response.groups[0].items,
         })
       })
+      .catch(error => {
+        this.setState({ venuesError: error })
+      })
       /* A second .then is chained so that we know the data from the API
        * request has been returned before calling loadMap
        */
-      .then(() => this.loadMap())
+      .then(() => {
+        if(!this.state.venuesError) {
+          this.loadMap()
+        } else {
+          'There was an error'
+        }
+      })
     // axios.get(endpoint + new URLSearchParams(parameters))
     //   .then(response => {
     //     this.setState({
@@ -57,13 +69,15 @@ class MapContainer extends Component {
 
   // Loads the Google map and calls addMarkers
   loadMap() {
-    if (this.props.google) {
+    if (!this.state.venuesError && this.props.google) {
       const {google} = this.props
 
       this.map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: 40.7218, lng: -73.9998 },
         zoom: 15
       })
+    } else {
+      'there was an error'
     }
 
     this.addMarkers()
@@ -135,6 +149,9 @@ class MapContainer extends Component {
            }))
         })
       })
+      .catch(error => {
+        this.setState({ photosError: error })
+      })
       /* Another .then is chained to the first so that createInfoWindow isn't called
        * before the data is ready.
        */
@@ -180,12 +197,26 @@ class MapContainer extends Component {
 
   // Sets the content for an info window and opens it on the specific marker.
   createInfoWindow = (marker, infoWindow) => {
-    let photosString = ''
-    this.state.photoURLs.forEach(photoURL => {
-      photosString += `<img src=${photoURL} />`
-    })
-    infoWindow.setContent(`<h3>${marker.title}</h3><h4>${photosString}</h4>`)
-    infoWindow.open(this.map, marker)
+    if (!this.state.photosError) {
+      let photosString = ''
+      this.state.photoURLs.forEach(photoURL => {
+        photosString += `<img src=${photoURL} />`
+      })
+      infoWindow.setContent(`<h3>${marker.title}</h3><h4>${photosString}</h4>`)
+      infoWindow.open(this.map, marker)
+    } else {
+      infoWindow.setContent(`<h3>${marker.title}</h3><h4>Can't get photos. Try agian later.</h4>`)
+      infoWindow.open(this.map, marker)
+    }
+  }
+
+  renderError = () => {
+    if (this.state.venuesError) {
+      return <Error
+        venuesError = {this.state.venuesError}
+        errorMsg = 'There was an error loading the map. Please try again.'
+      />
+    }
   }
 
   render() {
@@ -204,6 +235,7 @@ class MapContainer extends Component {
               animateMarker = {this.animateMarker}
               getAdditionalInfo = {this.getAdditionalInfo}
             />
+            {this.renderError()}
             <div id="map"></div>
           </section>
       </section>
