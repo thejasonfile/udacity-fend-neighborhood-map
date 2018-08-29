@@ -10,7 +10,7 @@ class MapContainer extends Component {
     infoWindow: new this.props.google.maps.InfoWindow(),
     markers: [],
     input: '',
-    additionalInfo: null
+    photoURLs: []
   }
 
   //When the map is rendered an API call is made to fetch all venues.
@@ -114,11 +114,17 @@ class MapContainer extends Component {
    * additional info.
    */
   getAdditionalInfo = (marker, infoWindow) => {
-    console.log('get additional info')
-    const endpoint = "https://api.myjson.com/bins/fo41s"
+    this.setState({ photoURLs: [] })
+    const endpoint = "https://api.myjson.com/bins/dpfdg"
     axios.get(endpoint)
       .then(response => {
-        this.setState({ additionalInfo: response.data.response.headerLocation })
+        let photos = response.data.response.photos.items
+        photos.forEach(photo => {
+          let photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
+          this.setState(state => ({
+             photoURLs: [...state.photoURLs, photoURL]
+           }))
+        })
       })
       /* Another .then is chained to the first so that createInfoWindow isn't called
        * before the data is ready.
@@ -158,7 +164,11 @@ class MapContainer extends Component {
 
   // Sets the content for an info window and opens it on the specific marker.
   createInfoWindow = (marker, infoWindow) => {
-    infoWindow.setContent(`<h3>${marker.title}</h3><h4>${this.state.additionalInfo}</h4>`)
+    let photosString = ''
+    this.state.photoURLs.forEach(photoURL => {
+      photosString += `<img src=${photoURL} />`
+    })
+    infoWindow.setContent(`<h3>${marker.title}</h3><h4>${photosString}</h4>`)
     infoWindow.open(this.map, marker)
   }
 

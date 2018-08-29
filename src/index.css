@@ -9,6 +9,11 @@ html, body {
    display: flex;
  }
 
+ img {
+   height: 200px;
+   width: 200px
+ }
+
 #container {
   width: 100vw;
 }
