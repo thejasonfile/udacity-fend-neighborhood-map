@@ -22,19 +22,17 @@ class MapContainer extends Component {
   }
 
   getAllVenues = () => {
-    //const endpoint = "https://api.myjson.com/bins/fo41s"
-    const testEndpoint = "https://api.myjson.com/bins/fo41s"
-    // const parameters = {
-    //   client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
-    //   client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
-    //   query: "sights",
-    //   ll: "40.7033,-74.0170",
-    //   v: "20182507"
-    // }
+    const endpoint = "https://api.foursquare.com/v2/venues/explore?"
+    const parameters = {
+      client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
+      client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
+      query: "sights",
+      ll: "40.7033,-74.0170",
+      v: "20182507"
+    }
 
-    /* this axios get is for testing so we don't go over rate limit on Foursquare */
 
-    axios.get(testEndpoint)
+    axios.get(endpoint + new URLSearchParams(parameters))
       .then(response => {
         this.setState({
           allVenues: response.data.response.groups[0].items,
@@ -56,17 +54,6 @@ class MapContainer extends Component {
           this.renderError()
         }
       })
-    // axios.get(endpoint + new URLSearchParams(parameters))
-    //   .then(response => {
-    //     this.setState({
-    //       allVenues: response.data.response.groups[0].items,
-    //       filteredVenues: response.data.response.groups[0].items
-    //     }, this.renderMap())
-    //   })
-    //   .catch(error => {
-    //     console.log('ERROR! ' + error)
-    //   })
-
   }
 
   // Loads the Google map and calls addMarkers
@@ -151,15 +138,13 @@ class MapContainer extends Component {
   getAdditionalInfo = (marker, infoWindow) => {
     const venueID = this.getVenueID(marker)
     this.setState({ photoURLs: [] })
-    const testEndpoint = "https://api.myjson.com/bins/dpfdg"
-    //const endpoint = `https://api.foursquare.com/v2/venues/${venueID}/photos?`
+    const endpoint = `https://api.foursquare.com/v2/venues/${venueID}/photos?`
     const parameters = {
       client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
       client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
       v: "20182507"
     }
-    //axios.get(endpoint + new URLSearchParams(parameters))
-    axios.get(testEndpoint)
+    axios.get(endpoint + new URLSearchParams(parameters))
       .then(response => {
         let photos = response.data.response.photos.items
         photos.forEach(photo => {
