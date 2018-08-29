@@ -13,6 +13,7 @@ class MapContainer extends Component {
     additionalInfo: null
   }
 
+  //When the map is rendered an API call is made to fetch all venues.
   componentDidMount() {
     this.getAllVenues()
   }
@@ -36,6 +37,9 @@ class MapContainer extends Component {
           filteredVenues: response.data.response.groups[0].items,
         })
       })
+      /* A second .then is chained so that we know the data from the API
+       * request has been returned before calling loadMap
+       */
       .then(() => this.loadMap())
     // axios.get(endpoint + new URLSearchParams(parameters))
     //   .then(response => {
@@ -50,6 +54,7 @@ class MapContainer extends Component {
 
   }
 
+  // Loads the Google map and calls addMarkers
   loadMap() {
     if (this.props.google) {
       const {google} = this.props
@@ -63,6 +68,10 @@ class MapContainer extends Component {
     this.addMarkers()
   }
 
+  /* Uses the data in allVenues to create a marker for each venue. A click listener
+   * is also added to each venue.  The state is updated as well as the current
+   * bounds for the map.
+   */
   addMarkers = () => {
     const {google} = this.props
     let {infoWindow, allVenues} = this.state
@@ -92,12 +101,18 @@ class MapContainer extends Component {
     this.map.fitBounds(bounds)
   }
 
+  /* This controls the value of the input field and also calls additional functions
+   * to apply the filter.
+   */
   onInputChange = e => {
     this.setState({ input: e.target.value })
     this.filterList(e.target.value)
     this.filterMarkers(e.target.value)
   }
 
+  /* When a marker or list item is clicked an additional API call is made to fetch
+   * additional info.
+   */
   getAdditionalInfo = (marker, infoWindow) => {
     console.log('get additional info')
     const endpoint = "https://api.myjson.com/bins/fo41s"
@@ -105,15 +120,23 @@ class MapContainer extends Component {
       .then(response => {
         this.setState({ additionalInfo: response.data.response.headerLocation })
       })
+      /* Another .then is chained to the first so that createInfoWindow isn't called
+       * before the data is ready.
+       */
       .then(() => this.createInfoWindow(marker, infoWindow))
   }
 
+  // Filters the location list based on the text in the input field
   filterList = input => {
     let {allVenues} = this.state
     let filteredVenues = allVenues.filter(venue => venue.venue.name.toLowerCase().includes(input.toLowerCase()))
     this.setState({ filteredVenues })
   }
 
+  /* Filters the markers based on the text in the input field. When the input
+   * field changes, all markers are set to invisible and then only those markers
+   * whose title matches the input field text are then set back to visible.
+   */
   filterMarkers = input => {
     let {markers, infoWindow} = this.state
     infoWindow.close()
@@ -123,6 +146,9 @@ class MapContainer extends Component {
     filteredMarkers.forEach(marker => marker.setVisible(true))
   }
 
+  /* Sets the animation for a marker when it is clicked.  Turns off animation for
+   * the rest of them.
+   */
   animateMarker = marker => {
     let {google} = this.props
     let {markers} = this.state
@@ -130,6 +156,7 @@ class MapContainer extends Component {
     marker ? marker.setAnimation(google.maps.Animation.BOUNCE) : null
   }
 
+  // Sets the content for an info window and opens it on the specific marker.
   createInfoWindow = (marker, infoWindow) => {
     infoWindow.setContent(`<h3>${marker.title}</h3><h4>${this.state.additionalInfo}</h4>`)
     infoWindow.open(this.map, marker)
