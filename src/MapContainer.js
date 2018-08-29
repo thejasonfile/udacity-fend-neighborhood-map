@@ -81,7 +81,8 @@ class MapContainer extends Component {
     })
 
     /* Add listener to add title to iFrame. Needed to pass Lighthouse a11y audit.
-     * Code example from here: https://stackoverflow.com/questions/49012240/google-maps-js-iframe-title
+     * Code example from here:
+     * https://stackoverflow.com/questions/49012240/google-maps-js-iframe-title
      */
      this.map.addListener('idle', () => {
        document.getElementsByTagName('iframe')[0].title = "Google Maps";

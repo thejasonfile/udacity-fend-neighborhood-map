@@ -8,17 +8,13 @@
 
 ## Description
 
-<<<<<<< HEAD
-A neighborhood map pointing out places of interest in lower Manhattan.
-||||||| merged common ancestors
-A neighborhood map pointing out places of interest.  This is project number 7
-for [Udacity's](https://www.udacity.com/) Front-End Nanodegree (FEND) Program.
-=======
 A neighborhood map pointing out places of interest in lower Manhattan.  
 This is the final project for [Udacity's](https://www.udacity.com/) Front-End Nanodegree (FEND) Program. (This is as of August 2018. It seems Udacity has changed the curriculum
 for the FEND course.  It is now only 5 projects with the React projects being a part
 of their own course.)
->>>>>>> 084e1d641032faeef6aa5c51118ab53cd6c42887
+
+I have not set up billing with Google so the map displays a "For development
+purposes only" watermark. This does not impair map functionality.
 
 This is the final project for [Udacity's](https://www.udacity.com/) Front-End Nanodegree (FEND) Program. (This is as of August 2018. It seems Udacity has changed the curriculum
 for the FEND course.  It is now only 5 projects with the React projects being a part
