@@ -8,13 +8,15 @@
 
 ## Description
 
-A neighborhood map pointing out places of interest.  This is project number 7
-for [Udacity's](https://www.udacity.com/) Front-End Nanodegree (FEND) Program.
+A neighborhood map pointing out places of interest in lower Manhattan.  
+This is the final project for [Udacity's](https://www.udacity.com/) Front-End Nanodegree (FEND) Program. (This is as of August 2018. It seems Udacity has changed the curriculum
+for the FEND course.  It is now only 5 projects with the React projects being a part
+of their own course.)
 
 The project was built using [create-react-app](https://github.com/facebook/create-react-app)
 
 I used a few different resources for research and inspiration.  First,
-[this great walkthrough by Edoh](https://www.youtube.com/watch?v=9t1xxypdkrE&feature=youtu.be)
+[this great walkthrough by Edoh Kodjo](https://www.youtube.com/watch?v=9t1xxypdkrE&feature=youtu.be)
 on how to use the npm package [Goolge-Maps-React](https://github.com/fullstackreact/google-maps-react) for
 integrating the Google Maps API with React.  Also, a lot of research using the
 [Google Maps Javascript API Documentation](https://developers.google.com/maps/documentation/javascript/tutorial).
