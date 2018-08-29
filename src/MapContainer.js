@@ -19,7 +19,8 @@ class MapContainer extends Component {
   }
 
   getAllVenues = () => {
-    const endpoint = "https://api.myjson.com/bins/fo41s"
+    //const endpoint = "https://api.myjson.com/bins/fo41s"
+    const testEndpoint = "https://api.myjson.com/bins/fo41s"
     // const parameters = {
     //   client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
     //   client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
@@ -30,7 +31,7 @@ class MapContainer extends Component {
 
     /* this axios get is for testing so we don't go over rate limit on Foursquare */
 
-    axios.get(endpoint)
+    axios.get(testEndpoint)
       .then(response => {
         this.setState({
           allVenues: response.data.response.groups[0].items,
@@ -114,9 +115,17 @@ class MapContainer extends Component {
    * additional info.
    */
   getAdditionalInfo = (marker, infoWindow) => {
+    const venueID = this.getVenueID(marker)
     this.setState({ photoURLs: [] })
-    const endpoint = "https://api.myjson.com/bins/dpfdg"
-    axios.get(endpoint)
+    const testEndpoint = "https://api.myjson.com/bins/dpfdg"
+    //const endpoint = `https://api.foursquare.com/v2/venues/${venueID}/photos?`
+    const parameters = {
+      client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
+      client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
+      v: "20182507"
+    }
+    //axios.get(endpoint + new URLSearchParams(parameters))
+    axios.get(testEndpoint)
       .then(response => {
         let photos = response.data.response.photos.items
         photos.forEach(photo => {
@@ -130,6 +139,13 @@ class MapContainer extends Component {
        * before the data is ready.
        */
       .then(() => this.createInfoWindow(marker, infoWindow))
+  }
+
+  getVenueID = marker => {
+    let {allVenues} = this.state
+    let venue = allVenues.filter(venue => venue.venue.name === marker.title)
+    let venueID = venue[0].venue.id
+    return venueID
   }
 
   // Filters the location list based on the text in the input field
