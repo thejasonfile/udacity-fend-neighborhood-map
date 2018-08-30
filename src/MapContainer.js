@@ -24,8 +24,8 @@ class MapContainer extends Component {
   getAllVenues = () => {
     const endpoint = "https://api.foursquare.com/v2/venues/explore?"
     const parameters = {
-      client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
-      client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
+      client_id: process.env.REACT_APP_FS_CLIENT,
+      client_secret: process.env.REACT_APP_FS_SECRET,
       query: "sights",
       ll: "40.7033,-74.0170",
       v: "20182507"
@@ -141,8 +141,8 @@ class MapContainer extends Component {
     this.setState({ photoURLs: [] })
     const endpoint = `https://api.foursquare.com/v2/venues/${venueID}/photos?`
     const parameters = {
-      client_id: "FA4SYGNXG02SY2UUAGLCWQNWQ12TYIWOYQJO0XZ2FLRIVAPI",
-      client_secret: "3PDXYRFCXNYSMISWXT5Y0YQPPALTI1ZUZLTHMETYNE3YCM3G",
+      client_id: process.env.REACT_APP_FS_CLIENT,
+      client_secret: process.env.REACT_APP_FS_SECRET,
       v: "20182507"
     }
     axios.get(endpoint + new URLSearchParams(parameters))
