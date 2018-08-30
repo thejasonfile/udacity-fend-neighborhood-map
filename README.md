@@ -38,6 +38,8 @@ Dependencies include:
 
 Download this repo and install dependencies ```npm i```
 
+You will need to provide your own Foursquare and Google Maps API keys.
+
 Then start a web server with npm ```npm start```
 
 Then open your browser to ```http://localhost:3000```
