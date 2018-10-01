@@ -23,16 +23,15 @@ class MapContainer extends Component {
 
   getAllVenues = () => {
     const endpoint = "https://api.foursquare.com/v2/venues/explore?"
-    const parameters = {
-      client_id: process.env.REACT_APP_FS_CLIENT,
-      client_secret: process.env.REACT_APP_FS_SECRET,
-      query: "sights",
-      ll: "40.7033,-74.0170",
-      v: "20182507"
-    }
-
-
-    axios.get(endpoint + new URLSearchParams(parameters))
+    axios.get(endpoint, {
+      params: {
+        client_id: process.env.REACT_APP_FS_CLIENT,
+        client_secret: process.env.REACT_APP_FS_SECRET,
+        query: "sights",
+        ll: "40.7033,-74.0170",
+        v: "20182507"
+      }
+    })
       .then(response => {
         this.setState({
           allVenues: response.data.response.groups[0].items,
@@ -140,12 +139,13 @@ class MapContainer extends Component {
     const venueID = this.getVenueID(marker)
     this.setState({ photoURLs: [] })
     const endpoint = `https://api.foursquare.com/v2/venues/${venueID}/photos?`
-    const parameters = {
-      client_id: process.env.REACT_APP_FS_CLIENT,
-      client_secret: process.env.REACT_APP_FS_SECRET,
-      v: "20182507"
-    }
-    axios.get(endpoint + new URLSearchParams(parameters))
+    axios.get(endpoint, {
+      params: {
+        client_id: process.env.REACT_APP_FS_CLIENT,
+        client_secret: process.env.REACT_APP_FS_SECRET,
+        v: "20182507"
+      }
+    })
       .then(response => {
         let photos = response.data.response.photos.items
         photos.forEach(photo => {
